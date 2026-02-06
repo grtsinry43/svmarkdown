@@ -1,7 +1,7 @@
 {
   "name": "svmarkdown",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Runtime markdown renderer for Svelte based on markdown-it and AST blocks.",
   "author": "grtsinry43",
   "license": "MIT",
