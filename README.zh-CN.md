@@ -1,20 +1,18 @@
 # svmarkdown (Svelte Markdown)
 
-Runtime-first Markdown rendering for Svelte.
+`svmarkdown` (Svelte Markdown) 是一个运行时 Markdown 渲染库：
 
-- Parser: `markdown-it`
-- Core output: custom AST/Blocks (not HTML strings)
-- Renderer: declarative Svelte component tree (no DOM scan/mount pipeline)
+- 解析层：`markdown-it`
+- 输出格式：库自己的 AST/Blocks（非 HTML 字符串）
+- 渲染结果：声明式 Svelte 组件树
 
-[中文文档 (zh-CN)](./README.zh-CN.md)
-
-## Install
+## 安装
 
 ```bash
 pnpm add svmarkdown
 ```
 
-## Quick Start
+## 快速开始
 
 ```svelte
 <script lang="ts">
@@ -35,21 +33,21 @@ pnpm add svmarkdown
 <Markdown {content} {components} />
 ```
 
-## Custom Component Syntax
+## 自定义组件语法
 
-### 1. Container (`:::`)
+### 1. Container（`:::`）
 
-just use ::: [component] key="value" to create a component block, and the content inside will be passed as `children` prop.
+你可以使用 ::: [组件名] key="value" 来创建一个组件块，块内的内容会作为 `children` prop 传入组件。
 
 ```md
 ::: Alert type=warning title="Heads up"
-This is **Markdown children**.
+这里是 **Markdown children**。
 :::
 ```
 
-### 2. Fence (```)
+### 2. Fence（```）
 
-just use ```component:[component] {"key":"value"} to create a component block, and the content inside will be passed as `children` prop.
+你可以使用 ```component:[组件名] {"key":"value"} 来创建一个组件块，块内的内容会作为 `children` prop 传入组件。
 
 ````md
 ```component:Chart {"title":"Traffic"}
@@ -65,11 +63,11 @@ Feb,530
 import { Markdown, createParser, parseMarkdown } from 'svmarkdown'
 ```
 
-- `parseMarkdown(markdown, options)`: parse once, returns `SvmdRoot`
-- `createParser(options)`: create a reusable parser for frequent updates
-- `<Markdown />`: runtime rendering with an `AST -> Svelte tree` update path
+- `parseMarkdown(markdown, options)`：一次性解析，返回 `SvmdRoot`
+- `createParser(options)`：创建可复用 parser，适合高频更新
+- `<Markdown />`：运行时渲染组件，每次变更时 `AST -> Svelte` 更新链路
 
-## Parse Options
+## parse options 定义
 
 ```ts
 import type { SvmdParseOptions } from 'svmarkdown'
@@ -87,7 +85,7 @@ const options: SvmdParseOptions = {
 }
 ```
 
-## Development
+## 开发
 
 ```bash
 pnpm install
@@ -97,12 +95,12 @@ pnpm run build
 pnpm run play
 ```
 
-## Advanced Extensions
+## 高级扩展用法
 
-### Configure component blocks
+### 更多组件块配置项
 
 ```ts
-const parseOptions: SvmdParseOptions = {
+const options: SvmdParseOptions = {
   componentBlocks: {
     Alert: true,
     Note: { container: true, fence: false },
@@ -112,10 +110,10 @@ const parseOptions: SvmdParseOptions = {
 }
 ```
 
-### Custom props parsing
+### 自定义 props 解析
 
 ```ts
-const parseOptions: SvmdParseOptions = {
+const options: SvmdParseOptions = {
   componentBlocks: {
     Alert: {
       parseProps(raw) {
@@ -130,21 +128,21 @@ const parseOptions: SvmdParseOptions = {
 }
 ```
 
-### Custom fence prefix
+### 自定义 fence 前缀
 
 ```ts
-const parseOptions: SvmdParseOptions = {
+const options: SvmdParseOptions = {
   fenceComponentPrefix: '@component:',
 }
 ```
 
-### Use markdown-it plugins
+### 使用 markdown-it 插件
 
 ```ts
 import footnote from 'markdown-it-footnote'
 import container from 'markdown-it-container'
 
-const parseOptions: SvmdParseOptions = {
+const options: SvmdParseOptions = {
   markdownItPlugins: [
     footnote,
     [container, 'spoiler', { marker: ':' }],
@@ -152,18 +150,18 @@ const parseOptions: SvmdParseOptions = {
 }
 ```
 
-### Provide your own MarkdownIt instance
+### 传入自定义 MarkdownIt 实例
 
 ```ts
 import MarkdownIt from 'markdown-it'
 
 const md = new MarkdownIt({ html: true, linkify: true })
-const parseOptions: SvmdParseOptions = {
+const options: SvmdParseOptions = {
   markdownIt: md,
 }
 ```
 
-### Render raw HTML (unsafe)
+### 渲染原始 HTML（不安全）
 
 ```svelte
 <Markdown
@@ -173,7 +171,7 @@ const parseOptions: SvmdParseOptions = {
 />
 ```
 
-### Control component inference
+### 关闭组件块自动推断
 
 ```svelte
 <Markdown
@@ -184,7 +182,7 @@ const parseOptions: SvmdParseOptions = {
 />
 ```
 
-### Access component metadata
+### 读取组件元信息
 
 ```svelte
 <script lang="ts">
@@ -194,7 +192,7 @@ const parseOptions: SvmdParseOptions = {
 </script>
 ```
 
-### Render AST nodes directly
+### 直接渲染 AST 节点
 
 ```svelte
 <script lang="ts">
