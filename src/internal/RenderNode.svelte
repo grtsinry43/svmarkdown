@@ -44,6 +44,10 @@
 
     return `language-${codeNode.lang}`
   }
+
+  function renderSoftBreak(): 'space' | 'newline' | 'br' {
+    return renderOptions?.softBreak ?? 'space'
+  }
 </script>
 
 {#if node.kind === 'text'}
@@ -52,7 +56,13 @@
   {#if node.hard}
     <br />
   {:else}
-    {'\n'}
+    {#if renderSoftBreak() === 'br'}
+      <br />
+    {:else if renderSoftBreak() === 'newline'}
+      {'\n'}
+    {:else}
+      {' '}
+    {/if}
   {/if}
 {:else if node.kind === 'html'}
   {#if renderOptions?.allowDangerousHtml}

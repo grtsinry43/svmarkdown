@@ -34,6 +34,44 @@ describe('parseMarkdown', () => {
     })
   })
 
+  it('parses blockquotes with soft and hard breaks', () => {
+    const ast = parseMarkdown(
+      [
+        '> line1',
+        '> line2',
+        '',
+        '> line1  ',
+        '> line2',
+      ].join('\n'),
+    )
+
+    const firstQuote = ast.children[0] as SvmdElementNode
+    expect(firstQuote.kind).toBe('element')
+    expect(firstQuote.name).toBe('blockquote')
+
+    const firstParagraph = firstQuote.children[0] as SvmdElementNode
+    expect(firstParagraph.name).toBe('p')
+    expect(firstParagraph.children.map((node) => node.kind)).toEqual([
+      'text',
+      'break',
+      'text',
+    ])
+    expect(firstParagraph.children[0]).toMatchObject({ kind: 'text', value: 'line1' })
+    expect(firstParagraph.children[1]).toMatchObject({ kind: 'break', hard: false })
+    expect(firstParagraph.children[2]).toMatchObject({ kind: 'text', value: 'line2' })
+
+    const secondQuote = ast.children[1] as SvmdElementNode
+    const secondParagraph = secondQuote.children[0] as SvmdElementNode
+    expect(secondParagraph.children.map((node) => node.kind)).toEqual([
+      'text',
+      'break',
+      'text',
+    ])
+    expect(secondParagraph.children[0]).toMatchObject({ kind: 'text', value: 'line1' })
+    expect(secondParagraph.children[1]).toMatchObject({ kind: 'break', hard: true })
+    expect(secondParagraph.children[2]).toMatchObject({ kind: 'text', value: 'line2' })
+  })
+
   it('parses ::: container components with props and markdown children', () => {
     const parser = createParser({
       componentBlocks: {

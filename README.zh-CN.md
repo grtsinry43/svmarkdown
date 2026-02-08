@@ -171,6 +171,15 @@ const options: SvmdParseOptions = {
 />
 ```
 
+### 软换行渲染策略
+
+```svelte
+<Markdown
+  content={md}
+  renderOptions={{ softBreak: 'space' }} // 'space' | 'newline' | 'br'
+/>
+```
+
 ### 关闭组件块自动推断
 
 ```svelte

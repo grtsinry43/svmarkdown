@@ -173,6 +173,15 @@ const parseOptions: SvmdParseOptions = {
 />
 ```
 
+### Soft break behavior
+
+```svelte
+<Markdown
+  content={md}
+  renderOptions={{ softBreak: 'space' }} // 'space' | 'newline' | 'br'
+/>
+```
+
 ### Control component inference
 
 ```svelte

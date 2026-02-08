@@ -97,4 +97,5 @@ export interface SvmdParseOptions {
 
 export interface SvmdRenderOptions {
   allowDangerousHtml?: boolean
+  softBreak?: 'space' | 'newline' | 'br'
 }
