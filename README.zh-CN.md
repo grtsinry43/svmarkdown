@@ -180,6 +180,16 @@ const options: SvmdParseOptions = {
 />
 ```
 
+### 链接组件的行内/独立布局
+
+```svelte
+<!-- 当覆写 `a` 时 -->
+<script lang="ts">
+  export let linkLayout // 'inline' | 'standalone'
+  export let linkStandalone // boolean
+</script>
+```
+
 ### 关闭组件块自动推断
 
 ```svelte

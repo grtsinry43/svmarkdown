@@ -52,6 +52,8 @@
     "This is an **Alert** component, content is standard Markdown.",
     ":::",
     "",
+    "https://svelte.dev",
+    "",
     '```component:Chart {"title":"Fence Component"}',
     "month,visits",
     "Jan,421",

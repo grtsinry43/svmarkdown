@@ -29,9 +29,10 @@
     node: SvmdNode
     components?: SvmdComponentMap
     renderOptions?: SvmdRenderOptions
+    parent?: SvmdNode
   }
 
-  let { node, components = {}, renderOptions }: Props = $props()
+  let { node, components = {}, renderOptions, parent }: Props = $props()
 
   function isVoidElement(elementNode: SvmdElementNode): boolean {
     return VOID_TAGS.has(elementNode.name)
@@ -47,6 +48,30 @@
 
   function renderSoftBreak(): 'space' | 'newline' | 'br' {
     return renderOptions?.softBreak ?? 'space'
+  }
+
+  function linkLayout(node: SvmdElementNode): 'inline' | 'standalone' {
+    if (node.name !== 'a') {
+      return 'inline'
+    }
+
+    if (!parent || parent.kind !== 'element') {
+      return 'inline'
+    }
+
+    if (!parent.block) {
+      return 'inline'
+    }
+
+    if (parent.children.length !== 1) {
+      return 'inline'
+    }
+
+    if (parent.children[0] !== node) {
+      return 'inline'
+    }
+
+    return 'standalone'
   }
 </script>
 
@@ -95,12 +120,12 @@
   {#if ComponentRenderer}
     <ComponentRenderer {...node.props} node={node} syntax={node.syntax} source={node.source}>
       {#if node.children.length > 0}
-        <RenderNodes nodes={node.children} {components} {renderOptions} />
+        <RenderNodes nodes={node.children} {components} {renderOptions} parent={node} />
       {/if}
     </ComponentRenderer>
   {:else}
     {#if node.children.length > 0}
-      <RenderNodes nodes={node.children} {components} {renderOptions} />
+      <RenderNodes nodes={node.children} {components} {renderOptions} parent={node} />
     {:else if node.source}
       <pre><code>{node.source}</code></pre>
     {/if}
@@ -109,17 +134,30 @@
   {@const ElementRenderer = components[node.name]}
 
   {#if ElementRenderer}
-    <ElementRenderer {...node.attrs} node={node}>
-      {#if node.children.length > 0}
-        <RenderNodes nodes={node.children} {components} {renderOptions} />
-      {/if}
-    </ElementRenderer>
+    {#if node.name === 'a'}
+      <ElementRenderer
+        {...node.attrs}
+        node={node}
+        linkLayout={linkLayout(node)}
+        linkStandalone={linkLayout(node) === 'standalone'}
+      >
+        {#if node.children.length > 0}
+          <RenderNodes nodes={node.children} {components} {renderOptions} parent={node} />
+        {/if}
+      </ElementRenderer>
+    {:else}
+      <ElementRenderer {...node.attrs} node={node}>
+        {#if node.children.length > 0}
+          <RenderNodes nodes={node.children} {components} {renderOptions} parent={node} />
+        {/if}
+      </ElementRenderer>
+    {/if}
   {:else if isVoidElement(node)}
     <svelte:element this={node.name} {...node.attrs} />
   {:else}
     <svelte:element this={node.name} {...node.attrs}>
       {#if node.children.length > 0}
-        <RenderNodes nodes={node.children} {components} {renderOptions} />
+        <RenderNodes nodes={node.children} {components} {renderOptions} parent={node} />
       {/if}
     </svelte:element>
   {/if}

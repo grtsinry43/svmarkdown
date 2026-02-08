@@ -182,6 +182,16 @@ const parseOptions: SvmdParseOptions = {
 />
 ```
 
+### Link component layout (inline vs standalone)
+
+```svelte
+<!-- when overriding `a` -->
+<script lang="ts">
+  export let linkLayout // 'inline' | 'standalone'
+  export let linkStandalone // boolean
+</script>
+```
+
 ### Control component inference
 
 ```svelte

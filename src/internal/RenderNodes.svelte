@@ -6,11 +6,12 @@
     nodes: SvmdNode[]
     components?: SvmdComponentMap
     renderOptions?: SvmdRenderOptions
+    parent?: SvmdNode
   }
 
-  let { nodes, components = {}, renderOptions }: Props = $props()
+  let { nodes, components = {}, renderOptions, parent }: Props = $props()
 </script>
 
 {#each nodes as node (node.key)}
-  <RenderNode {node} {components} {renderOptions} />
+  <RenderNode {node} {components} {renderOptions} {parent} />
 {/each}
